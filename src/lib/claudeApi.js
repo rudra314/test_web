@@ -96,7 +96,9 @@ export async function generateDeck(formData, slides, candidates, matchedXmls, sl
   if (!text) throw new Error('Empty response from Claude API')
 
   try {
-    return JSON.parse(text)
+    // Strip markdown code fences if Claude wrapped the response (e.g. ```json ... ```)
+    const cleaned = text.replace(/^```(?:json)?\s*/m, '').replace(/\s*```\s*$/m, '').trim()
+    return JSON.parse(cleaned)
   } catch {
     throw new Error(`Failed to parse Claude response as JSON:\n${text.slice(0, 300)}`)
   }
