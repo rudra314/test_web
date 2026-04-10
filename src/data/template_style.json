@@ -1,0 +1,15 @@
+{
+  "primary_color": "#003366",
+  "secondary_color": "#0066CC",
+  "accent_color": "#FF6600",
+  "background_color": "#FFFFFF",
+  "heading_font": "Calibri",
+  "body_font": "Calibri",
+  "heading_size": 28,
+  "body_size": 16,
+  "rules": [
+    "Always left-align body text",
+    "Never use more than 3 colours per slide",
+    "Minimum 0.5in margins on all sides"
+  ]
+}
