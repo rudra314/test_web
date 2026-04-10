@@ -1,26 +1,19 @@
 /**
  * pptxBuilder.js — assemble a .pptx file from Claude's response using pptxgenjs
  *
- * Applies colors, fonts and layout from template_style.json so every slide
- * matches the brand even before full template XML setup is complete.
+ * Smart layout engine:
+ *  - 4–10 items that follow "Title — description" pattern → 2-column numbered cards
+ *  - Everything else → clean bullet list
  *
- * Returns the pptxgen instance — call .writeFile({ fileName }) to download.
+ * Design tokens come from template_style.json.
  */
 
 import pptxgen from 'pptxgenjs'
 
-// Strip '#' from hex color strings for pptxgenjs
 function hex(color, fallback) {
   return (color || fallback).replace('#', '')
 }
 
-/**
- * @param {object} claudeResponse — { slides: [...] } from claudeApi
- * @param {Array}  parsedSlides   — raw slides from parser (always populated)
- * @param {object} formData       — form values
- * @param {object} options        — { confidentialityFooter: boolean }
- * @param {object} styleProfile   — from template_style.json
- */
 export async function buildPptx(claudeResponse, parsedSlides, formData, options = {}, styleProfile = {}) {
   const pptx = new pptxgen()
   pptx.layout = 'LAYOUT_16x9'
@@ -31,7 +24,6 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
     ? `${formData.customerName} — ${pptx.subject}`
     : pptx.subject
 
-  // ── Design tokens from template_style.json ───────────────────────────────
   const primaryColor = hex(styleProfile.primary_color, '#003366')
   const accentColor  = hex(styleProfile.accent_color,  '#FF6600')
   const headingFont  = styleProfile.heading_font || 'Calibri'
@@ -39,8 +31,6 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
   const headingSize  = Math.min(Number(styleProfile.heading_size) || 24, 28)
   const bodySize     = Number(styleProfile.body_size) || 14
 
-  // ── Source slides ─────────────────────────────────────────────────────────
-  // Prefer Claude's response; fall back to raw parsed slides
   const claudeSlides = claudeResponse?.slides || []
   const sourceSlides = claudeSlides.length > 0
     ? claudeSlides
@@ -53,30 +43,27 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
       }))
 
   sourceSlides.forEach((slideData, idx) => {
-    // Raw fallback for this slide (in case Claude returned empty body)
     const raw = parsedSlides[idx]
-
     const slide = pptx.addSlide()
 
     // ── Colored header band ───────────────────────────────────────────────
-    // Use string 'rect' — pptxgenjs shape name, not ShapeType enum
     slide.addShape('rect', {
-      x: 0, y: 0, w: 10, h: 1.2,
+      x: 0, y: 0, w: 10, h: 1.15,
       fill: { color: primaryColor },
       line: { color: primaryColor },
     })
 
     // ── Accent rule below header ──────────────────────────────────────────
     slide.addShape('rect', {
-      x: 0, y: 1.2, w: 10, h: 0.05,
+      x: 0, y: 1.15, w: 10, h: 0.04,
       fill: { color: accentColor },
       line: { color: accentColor },
     })
 
-    // ── Title (white text inside header) ─────────────────────────────────
+    // ── Title ─────────────────────────────────────────────────────────────
     const title = slideData.title || raw?.title || `Slide ${idx + 1}`
     slide.addText(title, {
-      x: 0.45, y: 0.14, w: 9.1, h: 0.92,
+      x: 0.4, y: 0.12, w: 9.2, h: 0.9,
       fontSize: headingSize,
       bold: true,
       color: 'FFFFFF',
@@ -84,8 +71,7 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
       valign: 'middle',
     })
 
-    // ── Body content ─────────────────────────────────────────────────────
-    // Priority: Claude bullets → Claude body_text → raw parsed body
+    // ── Resolve body lines ────────────────────────────────────────────────
     let bodyLines = []
     if (Array.isArray(slideData.bullets) && slideData.bullets.length > 0) {
       bodyLines = slideData.bullets
@@ -95,50 +81,138 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
       bodyLines = raw.body.split('\n').filter(l => l.trim())
     }
 
-    if (bodyLines.length > 0) {
-      slide.addText(
-        bodyLines.map(line => ({
-          text: line.replace(/^[-*•]\s*/, '').trim(),
-          options: { bullet: true },
-        })),
-        {
-          x: 0.5,
-          y: 1.38,
-          w: 9.0,
-          h: 5.1,
-          fontSize: bodySize,
-          color: '222222',
-          fontFace: bodyFont,
-          valign: 'top',
-          paraSpaceAfter: 6,
-        }
-      )
+    // Clean bullet markers
+    const cleanLines = bodyLines.map(l => l.replace(/^[-*•]\s*/, '').trim()).filter(Boolean)
+
+    // ── Choose and render layout ──────────────────────────────────────────
+    if (shouldUseCardLayout(cleanLines)) {
+      renderCards(slide, cleanLines, bodyFont, primaryColor)
+    } else {
+      renderBullets(slide, cleanLines, bodyFont, bodySize)
     }
 
-    // ── Slide number (bottom right) ───────────────────────────────────────
+    // ── Slide number ──────────────────────────────────────────────────────
     slide.addText(String(idx + 1), {
-      x: 8.8, y: 6.88, w: 0.9, h: 0.32,
-      fontSize: 9,
-      color: 'AAAAAA',
-      align: 'right',
-      fontFace: bodyFont,
+      x: 8.8, y: 6.9, w: 0.9, h: 0.3,
+      fontSize: 9, color: 'AAAAAA', align: 'right', fontFace: bodyFont,
     })
 
-    // ── Confidentiality footer (bottom left) ──────────────────────────────
+    // ── Confidentiality footer ────────────────────────────────────────────
     if (options.confidentialityFooter) {
       slide.addText('Confidential — for discussion purposes only', {
-        x: 0.3, y: 6.88, w: 7.5, h: 0.32,
-        fontSize: 8,
-        color: 'AAAAAA',
-        fontFace: bodyFont,
+        x: 0.3, y: 6.9, w: 7.5, h: 0.3,
+        fontSize: 8, color: 'AAAAAA', fontFace: bodyFont,
       })
     }
 
-    // ── Speaker notes ─────────────────────────────────────────────────────
     if (slideData.speaker_notes) {
       slide.addNotes(slideData.speaker_notes)
     }
   })
 
   return pptx
+}
+
+// ─── Layout detection ─────────────────────────────────────────────────────────
+
+function shouldUseCardLayout(lines) {
+  if (lines.length < 4 || lines.length > 10) return false
+  // More than half the lines contain a separator (— or - or :) indicating "title — body"
+  const withSep = lines.filter(l => /\s[—\-:]\s/.test(l)).length
+  return withSep >= Math.ceil(lines.length * 0.5)
+}
+
+// ─── Card layout (2-column numbered grid) ────────────────────────────────────
+
+function renderCards(slide, lines, bodyFont, primaryColor) {
+  const cols     = 2
+  const rows     = Math.ceil(lines.length / cols)
+  const startX   = 0.3
+  const startY   = 1.27
+  const gapX     = 0.18
+  const gapY     = 0.14
+  const totalW   = 9.4
+  const totalH   = 5.85   // 7.5 - 1.27 header area - 0.38 footer
+  const cardW    = (totalW - (cols - 1) * gapX) / cols
+  const cardH    = (totalH - (rows - 1) * gapY) / rows
+  const badgeW   = 0.48
+  const badgePad = 0.07
+
+  lines.forEach((line, i) => {
+    if (i >= cols * rows) return
+    const col = i % cols
+    const row = Math.floor(i / cols)
+    const x   = startX + col * (cardW + gapX)
+    const y   = startY + row * (cardH + gapY)
+
+    // Card background
+    slide.addShape('roundRect', {
+      x, y, w: cardW, h: cardH,
+      fill: { color: 'EEF3FB' },
+      line: { color: primaryColor, width: 0.5 },
+      rectRadius: 0.05,
+    })
+
+    // Number badge
+    slide.addShape('rect', {
+      x: x + badgePad, y: y + badgePad,
+      w: badgeW, h: cardH - badgePad * 2,
+      fill: { color: primaryColor },
+      line: { color: primaryColor },
+    })
+    slide.addText(String(i + 1).padStart(2, '0'), {
+      x: x + badgePad, y: y + badgePad,
+      w: badgeW, h: cardH - badgePad * 2,
+      fontSize: 13, bold: true, color: 'FFFFFF',
+      fontFace: bodyFont, align: 'center', valign: 'middle',
+    })
+
+    // Parse "Title — Description" split
+    const sepIdx = line.search(/\s[—\-:]\s/)
+    const cardTitle = sepIdx > -1 ? line.slice(0, sepIdx).trim() : line.trim()
+    const cardBody  = sepIdx > -1 ? line.slice(sepIdx).replace(/^\s*[—\-:]\s*/, '').trim() : ''
+
+    const textX = x + badgePad + badgeW + 0.1
+    const textW = cardW - badgePad - badgeW - 0.15
+    const titleH = cardBody ? cardH * 0.42 : cardH - badgePad * 2
+
+    // Card title
+    slide.addText(cardTitle, {
+      x: textX, y: y + badgePad,
+      w: textW, h: titleH,
+      fontSize: 9.5, bold: true,
+      color: primaryColor,
+      fontFace: bodyFont, valign: 'middle',
+    })
+
+    // Card body
+    if (cardBody) {
+      slide.addText(cardBody, {
+        x: textX, y: y + badgePad + titleH,
+        w: textW, h: cardH - badgePad - titleH - badgePad,
+        fontSize: 8.5, color: '333333',
+        fontFace: bodyFont, valign: 'top',
+      })
+    }
+  })
+}
+
+// ─── Bullet layout ────────────────────────────────────────────────────────────
+
+function renderBullets(slide, lines, bodyFont, bodySize) {
+  slide.addText(
+    lines.map(line => ({
+      text: line,
+      options: { bullet: true },
+    })),
+    {
+      x: 0.5, y: 1.27, w: 9.0, h: 5.85,
+      fontSize: bodySize,
+      color: '222222',
+      fontFace: bodyFont,
+      valign: 'top',
+      paraSpaceBefore: 0,
+      paraSpaceAfter: 5,
+    }
+  )
 }
