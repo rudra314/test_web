@@ -1,1 +1,914 @@
-[]
+[
+{
+"id": "cap_001",
+"tags": ["cover", "title-only", "light", "tagline", "date"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["cover"]
+},
+{
+"id": "cap_002",
+"tags": ["2-col", "product-overview", "light", "image", "bullets"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_003",
+"tags": ["5-col", "lifecycle", "icons", "light", "capabilities"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_004",
+"tags": ["4-col", "why-us", "logos", "light", "partner-badges", "icons"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_005",
+"tags": ["layered", "app-capabilities", "taxonomy", "light", "full-bleed-text"],
+"slots": 5,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_006",
+"tags": ["4-quadrant", "android", "technical", "light", "bullets"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_007",
+"tags": ["7-step", "process", "timeline", "android", "light", "icons"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "features"]
+},
+{
+"id": "cap_008",
+"tags": ["5-col", "icons", "embedded-systems", "sensors", "light", "image"],
+"slots": 11,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_009",
+"tags": ["2-col", "testing", "QA", "light", "bullets", "milestones"],
+"slots": 5,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_010",
+"tags": ["4-col", "NPI", "hardware", "icons", "light", "image"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_011",
+"tags": ["3-phase", "timeline", "NPI-process", "light", "flow"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "technical"]
+},
+{
+"id": "cap_012",
+"tags": ["4-col", "ecosystem", "logos", "partners", "light", "image"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_013",
+"tags": ["architecture-diagram", "layered", "fitness", "light", "image", "icons"],
+"slots": 18,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_014",
+"tags": ["3-phase", "poc", "framework", "light", "icons", "process"],
+"slots": 9,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "timeline"]
+},
+{
+"id": "cap_015",
+"tags": ["design-thinking", "agile", "AI-ML", "light", "table", "sprints"],
+"slots": 13,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "timeline"]
+},
+{
+"id": "cap_016",
+"tags": ["5-col", "edge-ai", "icons", "light", "capabilities"],
+"slots": 13,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_017",
+"tags": ["7-col", "architecture", "personalization", "light", "image", "ai"],
+"slots": 17,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_018",
+"tags": ["6-col", "cloud", "icons", "logos", "light", "partners"],
+"slots": 11,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_019",
+"tags": ["stats", "data-bi", "metrics", "light", "service-list"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_020",
+"tags": ["2-col", "AI-ML", "icons", "light", "image", "service-list"],
+"slots": 5,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_021",
+"tags": ["4-layer", "architecture", "cloud", "light", "image", "icons"],
+"slots": 12,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_022",
+"tags": ["timeline", "NPI", "manufacturing", "light", "roadmap", "process"],
+"slots": 33,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "technical"]
+},
+{
+"id": "cap_023",
+"tags": ["3-col", "engagement-models", "comparison", "light", "bullets"],
+"slots": 12,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["comparison", "features"]
+},
+{
+"id": "cap_024",
+"tags": ["matrix", "business-models", "light", "image", "icons", "delivery"],
+"slots": 16,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["comparison", "features"]
+},
+{
+"id": "cap_025",
+"tags": ["5-col", "case-studies", "metrics", "light", "staffing", "table"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_026",
+"tags": ["section-divider", "dark-image", "android", "light", "full-bleed"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["section-divider"]
+},
+{
+"id": "cap_027",
+"tags": ["4-quadrant", "android", "technical", "light", "bullets"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_028",
+"tags": ["7-step", "process", "timeline", "android", "light", "icons"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "features"]
+},
+{
+"id": "cap_029",
+"tags": ["text-heavy", "security-patching", "bullets", "light", "experience"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_030",
+"tags": ["section-divider", "GMS", "full-bleed", "image", "light"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["section-divider"]
+},
+{
+"id": "cap_031",
+"tags": ["3-col", "GMS-certification", "icons", "light", "image", "bullets"],
+"slots": 4,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_032",
+"tags": ["multi-col", "benchmarking", "validation", "light", "image", "technical"],
+"slots": 12,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_033",
+"tags": ["section-divider", "device-management", "OTA", "light", "full-bleed", "image"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["section-divider"]
+},
+{
+"id": "cap_034",
+"tags": ["5-col", "security", "OTA", "icons", "light", "image", "bullets"],
+"slots": 11,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_035",
+"tags": ["architecture-diagram", "device-lifecycle", "azure", "light", "image", "layered"],
+"slots": 21,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_036",
+"tags": ["MDM", "table", "features-list", "light", "image"],
+"slots": 4,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_037",
+"tags": ["MDM-overview", "bullets", "light", "image", "text-heavy"],
+"slots": 8,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_038",
+"tags": ["3-col", "use-cases", "table", "light", "image", "case-studies"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_039",
+"tags": ["section-divider", "observability", "APM", "light", "full-bleed", "image"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["section-divider"]
+},
+{
+"id": "cap_040",
+"tags": ["4-col", "observability", "telemetry", "light", "image", "bullets"],
+"slots": 6,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_041",
+"tags": ["3-col", "APM", "monitoring", "light", "image", "bullets"],
+"slots": 4,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_042",
+"tags": ["4-quadrant", "medtech", "capabilities", "light", "bullets"],
+"slots": 10,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_043",
+"tags": ["2x3-grid", "medtech", "icons", "light", "image", "cards"],
+"slots": 13,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_044",
+"tags": ["compliance", "certifications", "logos", "light", "image", "list"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_045",
+"tags": ["3-col", "talent", "transition", "light", "image", "bullets"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_046",
+"tags": ["4-step", "chrome-os", "enterprise", "light", "services", "bullets"],
+"slots": 16,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_047",
+"tags": ["4-col", "audio", "ASQ", "light", "image", "bullets"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_048",
+"tags": ["5-question", "kickoff", "dialogue", "light", "image", "Q&A"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["closing", "overview"]
+},
+{
+"id": "cap_049",
+"tags": ["3-col", "UX", "recommendations", "light", "bullets"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_050",
+"tags": ["table", "alignment-map", "comparison", "light", "numbered"],
+"slots": 21,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["comparison", "features"]
+},
+{
+"id": "cap_051",
+"tags": ["kickoff-checklist", "requirements", "light", "list"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["closing", "overview"]
+},
+{
+"id": "cap_052",
+"tags": ["4-col", "regulatory", "compliance", "light", "service-list"],
+"slots": 11,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "overview"]
+},
+{
+"id": "cap_053",
+"tags": ["framework", "data-governance", "layered", "light", "diagram"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_054",
+"tags": ["4-phase", "governance", "automation", "light", "image", "process"],
+"slots": 10,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "features"]
+},
+{
+"id": "cap_055",
+"tags": ["3-col", "data-lineage", "provenance", "light", "bullets"],
+"slots": 9,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_056",
+"tags": ["4-step", "lineage-framework", "icons", "light", "image", "process"],
+"slots": 6,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "features"]
+},
+{
+"id": "cap_057",
+"tags": ["3-pillar", "quality", "AI", "light", "image", "icons"],
+"slots": 8,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["features", "technical"]
+},
+{
+"id": "cap_058",
+"tags": ["blank", "empty", "light"],
+"slots": 0,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["closing"]
+}
+
+
+{
+"id": "prop_001",
+"tags": ["cover", "title-only", "text-centered", "light", "no-image"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["cover"]
+},
+{
+"id": "prop_002",
+"tags": ["agenda", "numbered-list", "2-col", "light", "table-of-contents"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["agenda"]
+},
+{
+"id": "prop_003",
+"tags": ["problem", "5-section", "icons", "image-right", "light", "challenges"],
+"slots": 7,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["problem", "background"]
+},
+{
+"id": "prop_004",
+"tags": ["solution", "logo-grid", "4-col", "partner-logos", "light", "differentiators"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "differentiators"]
+},
+{
+"id": "prop_005",
+"tags": ["2-col", "in-scope", "out-of-scope", "bullets", "light"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["scope"]
+},
+{
+"id": "prop_006",
+"tags": ["section-divider", "title-only", "light", "placeholder"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["section-divider"]
+},
+{
+"id": "prop_007",
+"tags": ["2-col", "comparison", "engagement-models", "light", "features"],
+"slots": 11,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "engagement-model"]
+},
+{
+"id": "prop_008",
+"tags": ["org-chart", "pod-structure", "icons", "roles", "light", "dense"],
+"slots": 24,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "engagement-model", "team-structure"]
+},
+{
+"id": "prop_009",
+"tags": ["timeline", "ramp-up", "table", "milestones", "light", "staffing"],
+"slots": 15,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "ramp-up"]
+},
+{
+"id": "prop_010",
+"tags": ["profiles", "4-col", "bios", "avatars", "light", "team"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["team", "ramp-up"]
+},
+{
+"id": "prop_011",
+"tags": ["4-phase", "process-flow", "icons", "light", "knowledge-transfer"],
+"slots": 15,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["transition", "timeline"]
+},
+{
+"id": "prop_012",
+"tags": ["governance", "org-structure", "hierarchy", "icons", "light", "dense"],
+"slots": 20,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["governance"]
+},
+{
+"id": "prop_013",
+"tags": ["delivery", "timeline-bar", "coverage-map", "2-col", "light"],
+"slots": 8,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["delivery-model", "hybrid"]
+},
+{
+"id": "prop_014",
+"tags": ["cover", "product-proposal", "automotive", "dark-accent", "light"],
+"slots": 4,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["cover"]
+},
+{
+"id": "prop_015",
+"tags": ["agenda", "numbered-list", "2-col", "light", "table-of-contents"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["agenda"]
+},
+{
+"id": "prop_016",
+"tags": ["executive-summary", "bullets", "2-section", "light", "overview"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["executive-summary"]
+},
+{
+"id": "prop_017",
+"tags": ["system-overview", "technical", "dense", "spec-grid", "light"],
+"slots": 29,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "technical"]
+},
+{
+"id": "prop_018",
+"tags": ["dfmea", "4-section", "technical", "icons", "light"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "technical"]
+},
+{
+"id": "prop_019",
+"tags": ["3-phase", "process-flow", "timeline", "light", "v-and-v"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "solution"]
+},
+{
+"id": "prop_020",
+"tags": ["commercials", "pricing-table", "financials", "light"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["commercials"]
+},
+{
+"id": "prop_021",
+"tags": ["assumptions", "bullets", "risks", "light", "dependencies"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["assumptions", "risks"]
+},
+{
+"id": "prop_022",
+"tags": ["executive-summary", "3-col", "images", "light", "overview"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["executive-summary", "cover"]
+},
+{
+"id": "prop_023",
+"tags": ["business-rationale", "icon", "bullets", "light", "single-column"],
+"slots": 1,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["problem", "background"]
+},
+{
+"id": "prop_024",
+"tags": ["3-col", "talent-model", "images", "light", "rebadging"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "team-structure"]
+},
+{
+"id": "prop_025",
+"tags": ["transition", "3-section", "bullets", "light", "knowledge-transfer"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["transition"]
+},
+{
+"id": "prop_026",
+"tags": ["roadmap", "3-phase", "BOT", "light", "strategic"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "roadmap"]
+},
+{
+"id": "prop_027",
+"tags": ["governance", "3-section", "bullets", "light", "operating-model"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["governance"]
+},
+{
+"id": "prop_028",
+"tags": ["commercials", "pricing-table", "transformation-fund", "light", "financials"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["commercials"]
+},
+{
+"id": "prop_029",
+"tags": ["benefits", "4-section", "icons", "light", "value-proposition"],
+"slots": 2,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["closing"]
+},
+{
+"id": "prop_030",
+"tags": ["transition", "3-section", "bullets", "light", "knowledge-transfer"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["transition"]
+},
+{
+"id": "prop_031",
+"tags": ["proposition", "3-col", "performance", "bullets", "light"],
+"slots": 7,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "differentiators"]
+},
+{
+"id": "prop_032",
+"tags": ["roadmap", "3-phase", "BOT", "light", "strategic"],
+"slots": 4,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "roadmap"]
+},
+{
+"id": "prop_033",
+"tags": ["optional-services", "4-col", "AI", "features", "light"],
+"slots": 14,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "features"]
+},
+{
+"id": "prop_034",
+"tags": ["technical", "tech-stack", "table", "light", "tools"],
+"slots": 1,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["technical", "solution"]
+},
+{
+"id": "prop_035",
+"tags": ["security", "process-cycle", "icons", "light", "phases"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "technical"]
+},
+{
+"id": "prop_036",
+"tags": ["usability", "table", "testing", "light", "methodology"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "technical"]
+},
+{
+"id": "prop_037",
+"tags": ["executive-summary", "2-col", "images", "light", "overview"],
+"slots": 9,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["executive-summary", "cover"]
+},
+{
+"id": "prop_038",
+"tags": ["benefits", "4-quadrant", "icons", "light", "pod-setup"],
+"slots": 6,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "engagement-model"]
+},
+{
+"id": "prop_039",
+"tags": ["objectives", "2-section", "bullets", "light", "requirements"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["background", "problem"]
+},
+{
+"id": "prop_040",
+"tags": ["requirements", "2-col", "images", "light", "customer-asks"],
+"slots": 3,
+"has_image": true,
+"has_chart": false,
+"bg": "light",
+"type": ["background", "solution"]
+},
+{
+"id": "prop_041",
+"tags": ["workforce", "framework", "grid", "light", "ramp-up"],
+"slots": 2,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["solution", "ramp-up"]
+},
+{
+"id": "prop_042",
+"tags": ["enablement", "4-section", "icons", "light", "knowledge-transfer"],
+"slots": 3,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["transition", "solution"]
+},
+{
+"id": "prop_043",
+"tags": ["ramp-up", "3-phase", "timeline", "light", "pod-formation"],
+"slots": 8,
+"has_image": false,
+"has_chart": false,
+"bg": "light",
+"type": ["timeline", "ramp-up"]
+}
+
+]
