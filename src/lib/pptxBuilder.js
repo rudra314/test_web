@@ -2,7 +2,7 @@
  * pptxBuilder.js — assemble a .pptx file from Claude's response using pptxgenjs
  *
  * Applies colors, fonts and layout from template_style.json so every slide
- * matches your brand even before full template XML setup is complete.
+ * matches the brand even before full template XML setup is complete.
  *
  * Returns the pptxgen instance — call .writeFile({ fileName }) to download.
  */
@@ -11,13 +11,12 @@ import pptxgen from 'pptxgenjs'
 
 // Strip '#' from hex color strings for pptxgenjs
 function hex(color, fallback) {
-  const c = color || fallback
-  return c.replace('#', '')
+  return (color || fallback).replace('#', '')
 }
 
 /**
  * @param {object} claudeResponse — { slides: [...] } from claudeApi
- * @param {Array}  parsedSlides   — raw slides from parser
+ * @param {Array}  parsedSlides   — raw slides from parser (always populated)
  * @param {object} formData       — form values
  * @param {object} options        — { confidentialityFooter: boolean }
  * @param {object} styleProfile   — from template_style.json
@@ -32,45 +31,51 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
     ? `${formData.customerName} — ${pptx.subject}`
     : pptx.subject
 
-  // ── Pull values from template_style.json ──────────────────────────────────
-  const primaryColor  = hex(styleProfile.primary_color,  '#003366')
-  const accentColor   = hex(styleProfile.accent_color,   '#FF6600')
-  const headingFont   = styleProfile.heading_font  || 'Calibri'
-  const bodyFont      = styleProfile.body_font     || 'Calibri'
-  const headingSize   = Math.min(styleProfile.heading_size || 24, 28)
-  const bodySize      = styleProfile.body_size     || 14
+  // ── Design tokens from template_style.json ───────────────────────────────
+  const primaryColor = hex(styleProfile.primary_color, '#003366')
+  const accentColor  = hex(styleProfile.accent_color,  '#FF6600')
+  const headingFont  = styleProfile.heading_font || 'Calibri'
+  const bodyFont     = styleProfile.body_font    || 'Calibri'
+  const headingSize  = Math.min(Number(styleProfile.heading_size) || 24, 28)
+  const bodySize     = Number(styleProfile.body_size) || 14
 
-  // ── Source slides: prefer Claude response, fall back to raw parsed ────────
-  const slides = claudeResponse?.slides || []
-  const sourceSlides = slides.length > 0
-    ? slides
+  // ── Source slides ─────────────────────────────────────────────────────────
+  // Prefer Claude's response; fall back to raw parsed slides
+  const claudeSlides = claudeResponse?.slides || []
+  const sourceSlides = claudeSlides.length > 0
+    ? claudeSlides
     : parsedSlides.map((ps, i) => ({
         slide_number: i + 1,
         title: ps.title,
-        bullets: ps.body.split('\n').filter((l) => l.trim()),
+        bullets: [],
         body_text: ps.body,
         speaker_notes: '',
       }))
 
   sourceSlides.forEach((slideData, idx) => {
+    // Raw fallback for this slide (in case Claude returned empty body)
+    const raw = parsedSlides[idx]
+
     const slide = pptx.addSlide()
 
     // ── Colored header band ───────────────────────────────────────────────
-    slide.addShape(pptx.ShapeType.rect, {
-      x: 0, y: 0, w: '100%', h: 1.2,
+    // Use string 'rect' — pptxgenjs shape name, not ShapeType enum
+    slide.addShape('rect', {
+      x: 0, y: 0, w: 10, h: 1.2,
       fill: { color: primaryColor },
       line: { color: primaryColor },
     })
 
     // ── Accent rule below header ──────────────────────────────────────────
-    slide.addShape(pptx.ShapeType.rect, {
-      x: 0, y: 1.2, w: '100%', h: 0.05,
+    slide.addShape('rect', {
+      x: 0, y: 1.2, w: 10, h: 0.05,
       fill: { color: accentColor },
       line: { color: accentColor },
     })
 
-    // ── Title text (white, inside header) ────────────────────────────────
-    slide.addText(slideData.title || `Slide ${idx + 1}`, {
+    // ── Title (white text inside header) ─────────────────────────────────
+    const title = slideData.title || raw?.title || `Slide ${idx + 1}`
+    slide.addText(title, {
       x: 0.45, y: 0.14, w: 9.1, h: 0.92,
       fontSize: headingSize,
       bold: true,
@@ -80,34 +85,34 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
     })
 
     // ── Body content ─────────────────────────────────────────────────────
-    const rawBullets = slideData.bullets?.length > 0
-      ? slideData.bullets
-      : (slideData.body_text || '').split('\n').filter((l) => l.trim())
+    // Priority: Claude bullets → Claude body_text → raw parsed body
+    let bodyLines = []
+    if (Array.isArray(slideData.bullets) && slideData.bullets.length > 0) {
+      bodyLines = slideData.bullets
+    } else if (typeof slideData.body_text === 'string' && slideData.body_text.trim()) {
+      bodyLines = slideData.body_text.split('\n').filter(l => l.trim())
+    } else if (raw?.body?.trim()) {
+      bodyLines = raw.body.split('\n').filter(l => l.trim())
+    }
 
-    if (rawBullets.length > 0) {
+    if (bodyLines.length > 0) {
       slide.addText(
-        rawBullets.map((b) => ({
-          text: b.replace(/^[-*•]\s*/, '').trim(),
-          options: { bullet: true, paraSpaceAfter: 5 },
+        bodyLines.map(line => ({
+          text: line.replace(/^[-*•]\s*/, '').trim(),
+          options: { bullet: true },
         })),
         {
-          x: 0.5, y: 1.38, w: 9.0, h: 5.1,
+          x: 0.5,
+          y: 1.38,
+          w: 9.0,
+          h: 5.1,
           fontSize: bodySize,
           color: '222222',
           fontFace: bodyFont,
           valign: 'top',
-          lineSpacingMultiple: 1.25,
+          paraSpaceAfter: 6,
         }
       )
-    } else if (slideData.body_text) {
-      slide.addText(slideData.body_text, {
-        x: 0.5, y: 1.38, w: 9.0, h: 5.1,
-        fontSize: bodySize,
-        color: '222222',
-        fontFace: bodyFont,
-        valign: 'top',
-        lineSpacingMultiple: 1.25,
-      })
     }
 
     // ── Slide number (bottom right) ───────────────────────────────────────

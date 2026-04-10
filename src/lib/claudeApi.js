@@ -7,47 +7,43 @@
 
 const API_KEY = import.meta.env.VITE_ANTHROPIC_API_KEY
 
-const SYSTEM_PROMPT = `You are a PowerPoint deck builder. You receive slide content and matched template candidates. You pick the best template per slide, fit the content, and output complete PPTX slide XML.
+const SYSTEM_PROMPT = `You are a PowerPoint presentation writer. You receive slide content and context, then rewrite and fit the content for each slide.
 
-LAYOUT SELECTION RULES:
-- Score >= 0.75: use template as-is, fill content into slots
-- Score 0.50-0.74: use template with adaptation, note what changed
-- Score < 0.50: invent a new slide layout using template_style.json design rules
+CONTENT-FIT RULES:
+1. Content too long: distill to the core message. No truncation mid-sentence. No ellipsis.
+2. Content too short: add one supporting point inferred from the brief and customer context.
+3. Bullet lists: merge if more than 7 bullets. Keep each bullet under 15 words.
+4. Never invent facts. If expanding, stay within what the user has implied.
+5. Apply the improvement level: "minimal" = fix overflows only, "balanced" = refine phrasing, "polish" = rewrite for impact.
 
-CONTENT-FIT RULES (apply to every slide):
-1. Check slot_map max_chars for the matched slide before placing content
-2. Content > max_chars: distill to fit. Keep core message. No mid-sentence truncation. No ellipsis.
-3. Content < 50% of max_chars: expand with one supporting point inferred from the brief and customer context
-4. Item count mismatches slot count: swap to nearest matching layout and report the swap
-5. Bullet lists: never exceed bullet_max from slot_map. Merge bullets if needed.
-6. Never invent facts. If expanding, stay within what the user has implied.
+TEMPLATE SELECTION RULES:
+- Score >= 0.75: use the top candidate template_id as-is.
+- Score 0.50-0.74: use the top candidate but note what changed in content_fit_detail.
+- Score < 0.50: pick the best matching template_id from the candidates list.
 
-CONFIDENCE SCORING (for the layout report):
-- slot_count_match: +0.40
-- content_type_tag_match: +0.25
-- visual_element_match: +0.20
-- density_match: +0.10
-- background_match: +0.05
-
-OUTPUT FORMAT:
-Return a JSON object with this exact structure:
+OUTPUT FORMAT — return ONLY a raw JSON object, no markdown fences, no explanation:
 {
   "slides": [
     {
       "slide_number": 1,
-      "title": "slide title",
+      "title": "refined slide title",
       "template_id": "slide_042",
       "confidence": 0.91,
       "content_fit": "Fits",
       "content_fit_detail": "",
-      "speaker_notes": "optional notes here",
+      "speaker_notes": "speaker note text or empty string",
       "bullets": ["bullet 1", "bullet 2"],
-      "body_text": "paragraph text if not bullets",
-      "xml": ""
+      "body_text": ""
     }
   ]
 }
-Output JSON only. No explanation. No markdown fences.`
+
+CRITICAL RULES FOR THE JSON:
+- "bullets" MUST be a non-empty array whenever the slide content is a list. Never return an empty array if the slide has list items.
+- "body_text" MUST be a non-empty string whenever the slide content is a paragraph (not a list).
+- Exactly one of "bullets" or "body_text" must have content per slide — never both empty.
+- "xml" field does NOT exist in the output. Do not include it.
+- Return raw JSON only. Absolutely no markdown code fences (\`\`\`).`
 
 /**
  * Build and send the Claude API request.

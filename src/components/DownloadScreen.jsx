@@ -123,7 +123,9 @@ export default function DownloadScreen({ formData, reportData, parsedSlides, can
             confidence: reportData[i]?.confidence || 0.5,
             content_fit: 'Fits',
             content_fit_detail: '',
-            xml: '',
+            bullets: slide.body.split('\n').filter(l => l.trim()),
+            body_text: slide.body,
+            speaker_notes: '',
           }))
         }
       }
