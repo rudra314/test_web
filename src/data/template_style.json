@@ -1,15 +1,24 @@
 {
-  "primary_color": "#003366",
-  "secondary_color": "#0066CC",
-  "accent_color": "#FF6600",
+  "primary_color": "#0070C0",
+  "secondary_color": "#0A2342",
+  "accent_color": "#E97132",
   "background_color": "#FFFFFF",
-  "heading_font": "Calibri",
-  "body_font": "Calibri",
-  "heading_size": 28,
-  "body_size": 16,
+  "heading_font": "Aptos Display",
+  "body_font": "Lato",
+  "heading_size": "36pt",
+  "body_size": "12pt",
+  "corner_radius": "roundRect ~8pt equivalent; snipRoundRect for section label headers",
+  "spacing_unit": "0.3in",
+  "icon_style": "filled flat icons inside circular or ellipse containers; color-matched to primary (#0070C0) or accent (#E97132); no bare icons, no outlines",
+  "dark_slides_used_for": "cover and section-divider slides only, using full-bleed dark photography or deep navy (#0A2342) solid fill; all content slides remain light",
   "rules": [
-    "Always left-align body text",
-    "Never use more than 3 colours per slide",
-    "Minimum 0.5in margins on all sides"
+    "Every content section must open with a snipRoundRect or colored header band in primary blue (#0070C0) to introduce the section topic — never begin content without a labeled section anchor",
+    "Icons must always be placed inside circular or ellipse containers; containers use primary blue or accent orange fills matched to the content category — icons are never bare on a white background",
+    "Multi-column layouts (3–5 columns) are the dominant content pattern; single-column text-only slides are reserved exclusively for section dividers or cover slides",
+    "Rounded rectangle cards (roundRect, ~8pt radius) with light blue-tinted fills (#E7F0F7 or #F7F9FC) are used to group related content blocks — plain bordered rectangles are never used for card groupings",
+    "Font hierarchy is strict and non-negotiable: 36pt Aptos Display Bold for slide titles, 14–16pt Lato Bold for subheadings, 12pt Lato Regular for body copy, 10–11pt Lato for captions and footnotes — Lato is the sole body typeface throughout",
+    "Color roles are functional and exclusive: #0070C0 for primary fills, headers, and dominant shape accents; #00B0F0 for secondary highlights and supporting fills; #63A844 for positive outcomes and in-scope callouts; #E97132 reserved only for numbered steps, key metric callouts, and highlight emphasis — never as a large-area background fill",
+    "Every content slide must pair text with a visual element (icon, diagram, image, or table); partner and client logos must be grouped in a dedicated logo bar row separated from body content by whitespace — text-only content slides are not permitted",
+    "Minimum left and top margins of 0.3in must be maintained for all text boxes and shapes relative to slide edges; tables replace prose whenever comparing options, pricing, or structured timelines"
   ]
 }
