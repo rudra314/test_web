@@ -24,12 +24,19 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
     ? `${formData.customerName} — ${pptx.subject}`
     : pptx.subject
 
-  const primaryColor = hex(styleProfile.primary_color, '#003366')
-  const accentColor  = hex(styleProfile.accent_color,  '#FF6600')
-  const headingFont  = styleProfile.heading_font || 'Calibri'
-  const bodyFont     = styleProfile.body_font    || 'Calibri'
-  const headingSize  = Math.min(Number(styleProfile.heading_size) || 24, 28)
-  const bodySize     = Number(styleProfile.body_size) || 14
+  const primaryColor   = hex(styleProfile.primary_color,   '#003366')
+  const accentColor    = hex(styleProfile.accent_color,    '#FF6600')
+  const secondaryColor = hex(styleProfile.secondary_color, '#003366')
+  const headingFont    = styleProfile.heading_font || 'Calibri'
+  const bodyFont       = styleProfile.body_font    || 'Calibri'
+
+  // Font sizes may be stored as "36pt" or as numbers — strip "pt" before parsing
+  const parsePt = (val, fallback) => {
+    const n = Number(String(val || '').replace(/pt$/i, '').trim())
+    return isNaN(n) || n === 0 ? fallback : n
+  }
+  const headingSize = Math.min(parsePt(styleProfile.heading_size, 24), 32)
+  const bodySize    = parsePt(styleProfile.body_size, 12)
 
   const claudeSlides = claudeResponse?.slides || []
   const sourceSlides = claudeSlides.length > 0
@@ -86,7 +93,7 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
 
     // ── Choose and render layout ──────────────────────────────────────────
     if (shouldUseCardLayout(cleanLines)) {
-      renderCards(slide, cleanLines, bodyFont, primaryColor)
+      renderCards(slide, cleanLines, bodyFont, primaryColor, secondaryColor)
     } else {
       renderBullets(slide, cleanLines, bodyFont, bodySize)
     }
@@ -124,7 +131,7 @@ function shouldUseCardLayout(lines) {
 
 // ─── Card layout (2-column numbered grid) ────────────────────────────────────
 
-function renderCards(slide, lines, bodyFont, primaryColor) {
+function renderCards(slide, lines, bodyFont, primaryColor, secondaryColor) {
   const cols     = 2
   const rows     = Math.ceil(lines.length / cols)
   const startX   = 0.3
@@ -148,7 +155,7 @@ function renderCards(slide, lines, bodyFont, primaryColor) {
     // Card background
     slide.addShape('roundRect', {
       x, y, w: cardW, h: cardH,
-      fill: { color: 'EEF3FB' },
+      fill: { color: 'E7F0F7' },
       line: { color: primaryColor, width: 0.5 },
       rectRadius: 0.05,
     })
