@@ -1,24 +1,30 @@
 /**
  * pptxBuilder.js — assemble a .pptx file from Claude's response using pptxgenjs
  *
- * Returns the pptxgen instance (call .writeFile() to download).
+ * Applies colors, fonts and layout from template_style.json so every slide
+ * matches your brand even before full template XML setup is complete.
+ *
+ * Returns the pptxgen instance — call .writeFile({ fileName }) to download.
  */
 
 import pptxgen from 'pptxgenjs'
 
-/**
- * Build the PPTX from Claude's response.
- *
- * @param {object} claudeResponse — { slides: [...] }
- * @param {Array}  parsedSlides — from parser.parseSlides() (raw user content)
- * @param {object} formData — form values
- * @param {object} options — { confidentialityFooter: boolean }
- * @returns {pptxgen} pptx instance — call .writeFile({ fileName }) to download
- */
-export async function buildPptx(claudeResponse, parsedSlides, formData, options = {}) {
-  const pptx = new pptxgen()
+// Strip '#' from hex color strings for pptxgenjs
+function hex(color, fallback) {
+  const c = color || fallback
+  return c.replace('#', '')
+}
 
-  // Set presentation metadata
+/**
+ * @param {object} claudeResponse — { slides: [...] } from claudeApi
+ * @param {Array}  parsedSlides   — raw slides from parser
+ * @param {object} formData       — form values
+ * @param {object} options        — { confidentialityFooter: boolean }
+ * @param {object} styleProfile   — from template_style.json
+ */
+export async function buildPptx(claudeResponse, parsedSlides, formData, options = {}, styleProfile = {}) {
+  const pptx = new pptxgen()
+  pptx.layout = 'LAYOUT_16x9'
   pptx.author = 'Deck Generator'
   pptx.company = formData.customerName || 'Internal'
   pptx.subject = formData.deckType === 'cap' ? 'Capabilities & Services' : 'Project Proposal'
@@ -26,97 +32,104 @@ export async function buildPptx(claudeResponse, parsedSlides, formData, options 
     ? `${formData.customerName} — ${pptx.subject}`
     : pptx.subject
 
-  // Default slide dimensions (widescreen 16:9)
-  pptx.layout = 'LAYOUT_16x9'
+  // ── Pull values from template_style.json ──────────────────────────────────
+  const primaryColor  = hex(styleProfile.primary_color,  '#003366')
+  const accentColor   = hex(styleProfile.accent_color,   '#FF6600')
+  const headingFont   = styleProfile.heading_font  || 'Calibri'
+  const bodyFont      = styleProfile.body_font     || 'Calibri'
+  const headingSize   = Math.min(styleProfile.heading_size || 24, 28)
+  const bodySize      = styleProfile.body_size     || 14
 
+  // ── Source slides: prefer Claude response, fall back to raw parsed ────────
   const slides = claudeResponse?.slides || []
-
-  // Fallback: if Claude returned nothing, build from parsed slides
-  const sourceSlides = slides.length > 0 ? slides : parsedSlides.map((ps, i) => ({
-    slide_number: i + 1,
-    title: ps.title,
-    bullets: ps.body.split('\n').filter((l) => l.trim()),
-    body_text: ps.body,
-    template_id: 'fallback',
-    confidence: 0.5,
-    content_fit: 'Fits',
-    speaker_notes: '',
-  }))
+  const sourceSlides = slides.length > 0
+    ? slides
+    : parsedSlides.map((ps, i) => ({
+        slide_number: i + 1,
+        title: ps.title,
+        bullets: ps.body.split('\n').filter((l) => l.trim()),
+        body_text: ps.body,
+        speaker_notes: '',
+      }))
 
   sourceSlides.forEach((slideData, idx) => {
     const slide = pptx.addSlide()
 
-    // ── Title ──
-    slide.addText(slideData.title || `Slide ${idx + 1}`, {
-      x: 0.5,
-      y: 0.4,
-      w: '85%',
-      h: 0.8,
-      fontSize: 24,
-      bold: true,
-      color: '003366',
-      fontFace: 'Calibri',
+    // ── Colored header band ───────────────────────────────────────────────
+    slide.addShape(pptx.ShapeType.rect, {
+      x: 0, y: 0, w: '100%', h: 1.2,
+      fill: { color: primaryColor },
+      line: { color: primaryColor },
     })
 
-    // ── Body content ──
-    const bullets = slideData.bullets && slideData.bullets.length > 0
+    // ── Accent rule below header ──────────────────────────────────────────
+    slide.addShape(pptx.ShapeType.rect, {
+      x: 0, y: 1.2, w: '100%', h: 0.05,
+      fill: { color: accentColor },
+      line: { color: accentColor },
+    })
+
+    // ── Title text (white, inside header) ────────────────────────────────
+    slide.addText(slideData.title || `Slide ${idx + 1}`, {
+      x: 0.45, y: 0.14, w: 9.1, h: 0.92,
+      fontSize: headingSize,
+      bold: true,
+      color: 'FFFFFF',
+      fontFace: headingFont,
+      valign: 'middle',
+    })
+
+    // ── Body content ─────────────────────────────────────────────────────
+    const rawBullets = slideData.bullets?.length > 0
       ? slideData.bullets
       : (slideData.body_text || '').split('\n').filter((l) => l.trim())
 
-    if (bullets.length > 0) {
-      // Render as bullet list
+    if (rawBullets.length > 0) {
       slide.addText(
-        bullets.map((b) => ({ text: b.replace(/^[-*•]\s*/, '').trim(), options: { bullet: true } })),
+        rawBullets.map((b) => ({
+          text: b.replace(/^[-*•]\s*/, '').trim(),
+          options: { bullet: true, paraSpaceAfter: 5 },
+        })),
         {
-          x: 0.5,
-          y: 1.4,
-          w: '90%',
-          h: 4.0,
-          fontSize: 16,
-          color: '212529',
-          fontFace: 'Calibri',
+          x: 0.5, y: 1.38, w: 9.0, h: 5.1,
+          fontSize: bodySize,
+          color: '222222',
+          fontFace: bodyFont,
           valign: 'top',
+          lineSpacingMultiple: 1.25,
         }
       )
     } else if (slideData.body_text) {
       slide.addText(slideData.body_text, {
-        x: 0.5,
-        y: 1.4,
-        w: '90%',
-        h: 4.0,
-        fontSize: 16,
-        color: '212529',
-        fontFace: 'Calibri',
+        x: 0.5, y: 1.38, w: 9.0, h: 5.1,
+        fontSize: bodySize,
+        color: '222222',
+        fontFace: bodyFont,
         valign: 'top',
+        lineSpacingMultiple: 1.25,
       })
     }
 
-    // ── Slide number (bottom right, always on) ──
+    // ── Slide number (bottom right) ───────────────────────────────────────
     slide.addText(String(idx + 1), {
-      x: '88%',
-      y: '91%',
-      w: '10%',
-      h: '6%',
-      fontSize: 10,
-      color: '888888',
+      x: 8.8, y: 6.88, w: 0.9, h: 0.32,
+      fontSize: 9,
+      color: 'AAAAAA',
       align: 'right',
-      fontFace: 'Calibri',
+      fontFace: bodyFont,
     })
 
-    // ── Confidentiality footer ──
+    // ── Confidentiality footer (bottom left) ──────────────────────────────
     if (options.confidentialityFooter) {
       slide.addText('Confidential — for discussion purposes only', {
-        x: '3%',
-        y: '91%',
-        w: '70%',
-        h: '6%',
+        x: 0.3, y: 6.88, w: 7.5, h: 0.32,
         fontSize: 8,
         color: 'AAAAAA',
-        fontFace: 'Calibri',
+        fontFace: bodyFont,
       })
     }
 
-    // ── Speaker notes ──
+    // ── Speaker notes ─────────────────────────────────────────────────────
     if (slideData.speaker_notes) {
       slide.addNotes(slideData.speaker_notes)
     }

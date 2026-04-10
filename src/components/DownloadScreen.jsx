@@ -138,7 +138,7 @@ export default function DownloadScreen({ formData, reportData, parsedSlides, can
 
       const pptx = await buildPptx(claudeResponse, parsedSlides, formData, {
         confidentialityFooter: formData.confidentialityFooter,
-      })
+      }, templateStyle)
       pptxRef.current = pptx
 
       setProgress(100)
