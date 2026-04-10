@@ -50,20 +50,14 @@ export default function App() {
     const slides = parseSlides(data.slideContent)
     setParsedSlides(slides)
 
-    let matchCandidates = []
-    if (slideEmbeddings.length > 0 && templateIndex.length > 0) {
-      matchCandidates = await preFilter(slides, slideEmbeddings, templateIndex)
-    } else {
-      matchCandidates = slides.map(() => [
-        { id: 'slide_001', score: 0.5, tags: [], slots: 2 }
-      ])
-    }
+    // preFilter handles all cases: semantic, keyword, or stub fallback
+    const matchCandidates = await preFilter(slides, slideEmbeddings, templateIndex)
     setCandidates(matchCandidates)
 
     const report = slides.map((slide, i) => ({
       slide_number: i + 1,
       title: slide.title,
-      template_id: matchCandidates[i]?.[0]?.id || 'slide_001',
+      template_id: matchCandidates[i]?.[0]?.id || templateIndex[0]?.id || 'slide_001',
       confidence: matchCandidates[i]?.[0]?.score || 0.5,
       content_fit: 'Fits',
       content_fit_detail: '',
