@@ -1,25 +1,36 @@
 {
-  "primary_color": "#E8500A",
-  "secondary_color": "#0072BC",
-  "accent_color": "#00A8E0",
-  "background_color": "#F0F4F8",
-  "heading_font": "Roboto",
-  "body_font": "Lato",
-  "heading_size": "28-36pt",
-  "body_size": "11-13pt",
-  "corner_radius": "8px",
-  "spacing_unit": "16px",
-  "icon_style": "line-style flat icons in white on blue circular backgrounds",
-  "dark_slides_used_for": "section headers and primary category labels within content cards",
+  "design_style": "Clean, structured layout with rounded containers, strong alignment, and consistent spacing. Use a white background.",
+
+  "primary_color": "#0072BC",
+  "accent_color": "#E8500A",
+
+  "font": {
+    "family": "Lato",
+    "body_text_color": "#000000",
+    "min_size": 10
+  },
+
+  "icon_style": "Line-style flat icons in white on blue circular backgrounds",
+
+  "usage": {
+    "dark_slides_used_for": "Section headers and primary category labels within content cards"
+  },
+
+  "layout_rules": {
+    "min_margin_px": 40,
+    "card_padding_px": 16,
+    "use_white_space": true
+  },
+
   "rules": [
-    "Use orange (#E8500A) exclusively for slide titles and brand name; never for body text or backgrounds",
-    "Use blue (#0072BC) for section headers, card headers, and supporting UI elements like circles and banners",
-    "Always place a vertical dashed blue left-border accent on key bullet lists to create visual hierarchy",
-    "Pair every major text block with either an icon, illustration, or supporting diagram on the opposite side",
-    "Card-based layouts use a white or light background with a colored top-bar header in dark blue or teal",
-    "Bottom footer bar always contains a horizontal row of equal-width dark-blue tiles for engineering pillars or key themes",
-    "Maintain minimum 40px margin on all sides; internal card padding minimum 16px",
-    "Use chevron-style bullet (›) or gear icon bullets consistently; never mix with standard round bullets within same slide",
-    "All outcomes or summary rows must be visually distinguished with a blue left border or box outline in the accent color"
+    "Use accent color #E8500A exclusively for slide titles only; never for body text or backgrounds",
+    "Use primary color #0072BC for section headers, card headers, and supporting UI elements like circles and banners",
+    "Font size must always be greater than 10",
+    "Ensure cards and layout patterns maintain sufficient white space",
+    "Always place a vertical dashed blue left border accent on key bullet lists to create visual hierarchy",
+    "Pair every major text block with an icon, illustration, or supporting diagram on the opposite side",
+    "Maintain minimum 40px margin on all sides and minimum 16px padding inside cards",
+    "Use chevron style bullet (›) or gear icon bullets consistently; do not mix with standard round bullets",
+    "All outcomes or summary rows must be visually distinguished with a blue left border or box outline"
   ]
 }
