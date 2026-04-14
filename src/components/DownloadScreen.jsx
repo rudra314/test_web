@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { generateDeck } from '../lib/claudeApi.js'
 import { buildPptx } from '../lib/pptxBuilder.js'
+import { injectIntoTemplate } from '../lib/templateInjector.js'
 import templateStyle from '../data/template_style.json'
 import slotMap from '../data/slot_map.json'
 
@@ -138,10 +139,20 @@ export default function DownloadScreen({ formData, reportData, parsedSlides, can
       setStageIdx(2)
       setProgress(80)
 
-      const pptx = await buildPptx(claudeResponse, parsedSlides, formData, {
-        confidentialityFooter: formData.confidentialityFooter,
-      }, templateStyle)
-      pptxRef.current = pptx
+      // Primary path: inject content into the real template PPTX
+      // Fallback: build programmatically with pptxBuilder if injection fails
+      let output
+      try {
+        const blob = await injectIntoTemplate(formData.deckType, claudeResponse.slides)
+        output = { type: 'blob', value: blob }
+      } catch (injErr) {
+        console.warn('[injector] Falling back to pptxBuilder:', injErr.message)
+        const pptx = await buildPptx(claudeResponse, parsedSlides, formData, {
+          confidentialityFooter: formData.confidentialityFooter,
+        }, templateStyle)
+        output = { type: 'pptx', value: pptx }
+      }
+      pptxRef.current = output
 
       setProgress(100)
       setStageIdx(3)
@@ -159,7 +170,20 @@ export default function DownloadScreen({ formData, reportData, parsedSlides, can
     const customerSafe = (formData.customerName || 'Customer').replace(/\s+/g, '_')
     const typeSafe = formData.deckType === 'cap' ? 'Capabilities' : 'Proposal'
     const fileName = `${customerSafe}_${typeSafe}_${date}.pptx`
-    await pptxRef.current.writeFile({ fileName })
+
+    const { type, value } = pptxRef.current
+    if (type === 'blob') {
+      const url = URL.createObjectURL(value)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = fileName
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } else {
+      await value.writeFile({ fileName })
+    }
   }
 
   const currentStageLabel = STAGES[Math.min(stageIdx, STAGES.length - 1)]?.label
